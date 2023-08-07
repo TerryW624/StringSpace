@@ -10,6 +10,9 @@ class User(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
+    teacher_id = db.Column(db.Integer, nullable=True)
+    is_teacher = db.Column(db.Boolean, nullable=False)
+    is_student = db.Column(db.Boolean, nullable=False)
 
     def hash_password(self):
         self.password = generate_password_hash(self.password).decode('utf8')

@@ -1,6 +1,7 @@
 from flask_marshmallow import Marshmallow
-from marshmallow import post_load, fields
+from marshmallow import post_load, fields, validates, ValidationError
 from database.models import User, Car
+
 
 ma = Marshmallow()
 
@@ -15,12 +16,21 @@ class RegisterSchema(ma.Schema):
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
     email = fields.String(required=True)
+    is_teacher = fields.Boolean(required=True)
+    is_student = fields.Boolean(required=True)
+    teacher_id = fields.Integer()
+
     class Meta:
-        fields = ("id", "username",  "password", "first_name", "last_name", "email")
+        fields = ("id", "username",  "password", "first_name", "last_name", "email", "teacher_id", "is_teacher", "is_student")
 
     @post_load
     def create_user(self, data, **kwargs):
         return User(**data)
+    
+    @validates('teacher_id')
+    def validate_teacher_id(self, data, **kwargs):
+        if data.get("is_student", False) and "teacher_id" not in data:
+            raise ValidationError("teacher_id is required for students.")
     
 class UserSchema(ma.Schema):
     """
@@ -31,8 +41,11 @@ class UserSchema(ma.Schema):
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
     email = fields.String(required=True)
+    teacher_id = fields.Integer()
+    is_teacher = fields.Boolean(required=True)
+    is_student = fields.Boolean(required=True)
     class Meta:
-        fields = ("id", "username", "first_name", "last_name", "email",)
+        fields = ("id", "username", "first_name", "last_name", "email", "teacher_id", "is_teacher", "is_student")
 
 register_schema = RegisterSchema()
 user_schema = UserSchema()
