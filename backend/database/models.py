@@ -34,3 +34,49 @@ class Car(db.Model):
     user = db.relationship("User")
 
 # TODO: Add your models below, remember to add a new migration and upgrade database
+class ChordProgression(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    song_id = db.Column(db.String(255), nullable=False)
+    user = db.relationship("User")
+
+class GroupChat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    chat_id = db.Column(db.Integer, db.ForeignKey("chat.id"))
+    user = db.relationship("User")
+    chat = db.relationship("Chat")
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(255), nullable=True)
+    project_item_id = db.Column(db.String(255), nullable=True)
+
+class Assignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    text = db.Column(db.String(255), nullable=False)
+    assignment_item_id = db.Column(db.String(255), nullable=False)
+    teacher = db.relationship("User")
+
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(255), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+
+students_assignments = db.Table("students_assignments",
+                                db.Column("student_id", db.Integer, db.ForeignKey("user.id")),
+                                db.Column("assignment_id", db.Integer, db.ForeignKey("assignment.id")),
+                                db.Column("notes", db.String(255)),
+                                db.Column("is_completed", db.Boolean),
+                                db.Column("student_check_in", db.String(255)))
+
+users_projects = db.Table("users_projects",
+                          db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+                          db.Column("project_id", db.Integer, db.ForeignKey("project.id")))
+
+users_group_chats = db.Table("users_group_chats",
+                             db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+                             db.Column("group_chat_id", db.Integer, db.ForeignKey("group_chat.id")))
+
