@@ -1,6 +1,6 @@
 from flask_marshmallow import Marshmallow
 from marshmallow import post_load, fields, validates_schema, ValidationError
-from database.models import User, Car
+from database.models import User, Car, Assignment
 
 
 ma = Marshmallow()
@@ -138,10 +138,12 @@ class AssignmentSchema(ma.Schema):
     text = fields.String(required=True)
     assignment_item_id = fields.String()
     teacher = ma.Nested(UserSchema, many=False)
+    class Meta:
+        fields = ("id", "teacher_id", "text", "assignment_item_id", "teacher")
 
     @post_load
     def create_assignment(self, data, **kwargs):
-        return AssignmentSchema(**data)
+        return Assignment(**data)
 
 assignment_schema = AssignmentSchema()
 assignments_schema = AssignmentSchema(many=True)
