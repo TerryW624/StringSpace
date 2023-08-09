@@ -89,27 +89,13 @@ class ChordProgressionSchema(ma.Schema):
 chord_progression_schema = ChordProgressionSchema()
 chord_progressions_schema = ChordProgressionSchema(many=True)
 
-class ChatSchema(ma.Schema):
-    id = fields.Integer(primary_key=True)
-    text = fields.String(required=True)
-    user_id = fields.Integer()
-    user = ma.Nested(UserSchema, many=False)
-
-    @post_load
-    def create_chat(self, data, **kwargs):
-        return ChatSchema(**data)
-    
-chat_schema = ChatSchema()
-chats_schema = ChatSchema(many=True)
-
 class GroupChatSchema(ma.Schema):
     id = fields.Integer(primary_key=True)
     user_id = fields.Integer()
     user = ma.Nested(UserSchema, many=True)
-    chat_id = fields.Integer()
-    chat = ma.Nested(ChatSchema, many=True)
+    text = fields.String(required=True)
     class Meta:
-        fields = ("id", "user_id", "chat_id", "user", "chat")
+        fields = ("id", "user_id", "text", "user")
 
     @post_load
     def create_group_chat(self, data, **kwargs):

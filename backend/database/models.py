@@ -43,9 +43,9 @@ class ChordProgression(db.Model):
 class GroupChat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    chat_id = db.Column(db.Integer, db.ForeignKey("chat.id"))
+    text = db.Column(db.String(255), nullable=False)
     user = db.relationship("User")
-    chat = db.relationship("Chat")
+
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,11 +59,6 @@ class Assignment(db.Model):
     assignment_item_id = db.Column(db.String(255), nullable=False)
     teacher = db.relationship("User")
 
-class Chat(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User")
 
 students_assignments = db.Table("students_assignments",
                                 db.Column("student_id", db.Integer, db.ForeignKey("user.id")),

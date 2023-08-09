@@ -12,7 +12,7 @@ class TeacherAssignmentResource(Resource):
         user_id = current_user.get('id')
         is_teacher = current_user.get('is_teacher')
         if is_teacher == True:
-            teacher_assignments = Assignment.query.filter_by(user_id=user_id)
+            teacher_assignments = Assignment.query.filter_by(teacher_id=user_id)
             return assignments_schema.dump(teacher_assignments), 200
         else:
             return "Not a valid user", 401
