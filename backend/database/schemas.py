@@ -1,8 +1,6 @@
 from flask_marshmallow import Marshmallow
 from marshmallow import post_load, fields, validates_schema, ValidationError
-from database.models import User, Car, Assignment
-
-
+from database.models import *
 ma = Marshmallow()
 
 # Auth Schemas
@@ -74,46 +72,17 @@ cars_schema = CarSchema(many=True)
 
 
 # TODO: Add your schemas below
-class ChordProgressionSchema(ma.Schema):
-    id = fields.Integer(primary_key=True)
-    user_id = fields.Integer()
-    song_id = fields.String(required=True)
-    user = ma.Nested(UserSchema, many=False)
-    class Meta:
-        fields = ("id", "user_id", "song_id", "user")
-    
-    @post_load
-    def create_chord_progression(self, data, **kwargs):
-        return ChordProgressionSchema(**data)
-    
-chord_progression_schema = ChordProgressionSchema()
-chord_progressions_schema = ChordProgressionSchema(many=True)
-
-class GroupChatSchema(ma.Schema):
-    id = fields.Integer(primary_key=True)
-    user_id = fields.Integer()
-    user = ma.Nested(UserSchema, many=True)
-    text = fields.String(required=True)
-    class Meta:
-        fields = ("id", "user_id", "text", "user")
-
-    @post_load
-    def create_group_chat(self, data, **kwargs):
-        return GroupChatSchema(**data)
-    
-group_chat_schema = GroupChatSchema()
-group_chats_schema = GroupChatSchema(many=True)
-
 class ProjectSchema(ma.Schema):
     id = fields.Integer(primary_key=True)
     text = fields.String(required=True)
-    project_item_id = fields.String()
+    song_id = fields.String()
+    video_id = fields.String()
     class Meta:
-        fields = ("id", "text", "project_item_id")
+        fields = ("id", "text", "song_id", "video_id")
 
     @post_load
     def create_project(self, data, **kwargs):
-        return ProjectSchema(**data)
+        return Project(**data)
     
 project_schema = ProjectSchema()
 projects_schema = ProjectSchema(many=True)
@@ -122,10 +91,11 @@ class AssignmentSchema(ma.Schema):
     id = fields.Integer(primary_key=True)
     teacher_id = fields.Integer()
     text = fields.String(required=True)
-    assignment_item_id = fields.String()
     teacher = ma.Nested(UserSchema, many=False)
+    song_id = fields.String()
+    video_id = fields.String()
     class Meta:
-        fields = ("id", "teacher_id", "text", "assignment_item_id", "teacher")
+        fields = ("id", "teacher_id", "text", "song_id", "video_id", "teacher")
 
     @post_load
     def create_assignment(self, data, **kwargs):
@@ -137,17 +107,19 @@ assignments_schema = AssignmentSchema(many=True)
 
 
 class StudentsAssignmentsSchema(ma.Schema):
+    students_assignments_id = fields.Integer(primary_key=True)
     student_id = fields.Integer()
     assignment_id = fields.Integer()
+    teacher_id = fields.Integer()
     notes = fields.String()
-    is_completed = fields.Boolean(required=True)
-    student_check_in = fields.String(required=True)
+    is_completed = fields.Boolean()
+    student_check_in = fields.String()
     student = ma.Nested(UserSchema, many=False)
     assignment = ma.Nested(AssignmentSchema, many=False)
 
     @post_load
     def create_students_assignments(self, data, **kwargs):
-        return StudentsAssignmentsSchema(**data)
+        return StudentsAssignments(**data)
     
 students_assignments_schema = StudentsAssignmentsSchema()
 many_students_assignments_schema = StudentsAssignmentsSchema(many=True)
@@ -160,21 +132,12 @@ class UsersProjectsSchema(ma.Schema):
 
     @post_load
     def create_users_projects(self, data, **kwargs):
-        return UsersProjectsSchema(**data)
+        return users_projects(**data)
 
 users_projects_schema = UsersProjectsSchema()
 many_users_projects_schema = UsersProjectsSchema(many=True)
 
-class UsersGroupChatsSchema(ma.Schema):
-    user_id = fields.Integer()
-    user = ma.Nested(UserSchema, many=False)
-    group_chat_id = fields.Integer()
-    group_chat = ma.Nested(GroupChatSchema, many=False)
 
-    @post_load
-    def create_users_group_chats(self, data, **kwargs):
-        return UsersGroupChatsSchema(**data)
 
-users_group_chats_schema = UsersGroupChatsSchema()
-many_users_group_chats_schema = UsersGroupChatsSchema(many=True)
+
 

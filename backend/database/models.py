@@ -34,44 +34,39 @@ class Car(db.Model):
     user = db.relationship("User")
 
 # TODO: Add your models below, remember to add a new migration and upgrade database
-class ChordProgression(db.Model):
+class UserText(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    song_id = db.Column(db.String(255), nullable=False)
+    usertext = db.Column(db.String(255), nullable=False)
     user = db.relationship("User")
 
-class GroupChat(db.Model):
+class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    text = db.Column(db.String(255), nullable=False)
-    user = db.relationship("User")
-
-
-class Project(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    user_text_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     text = db.Column(db.String(255), nullable=True)
-    project_item_id = db.Column(db.String(255), nullable=True)
+    song_id = db.Column(db.String(255), nullable=True)
+    video_id = db.Column(db.String(255), nullable=True)
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     text = db.Column(db.String(255), nullable=False)
-    assignment_item_id = db.Column(db.String(255), nullable=False)
     teacher = db.relationship("User")
+    song_id = db.Column(db.String(255), nullable=True)
+    video_id = db.Column(db.String(255), nullable=True)
 
+class StudentsAssignments(db.Model):
+    students_assignments_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    student = db.relationship("User")
+    assignment_id = db.Column(db.Integer, db.ForeignKey("assignment.id"))
+    assignment = db.relationship("Assignment")
+    notes = db.Column(db.String(255), nullable=True)
+    is_completed = db.Column(db.Boolean, default=False)
+    student_check_in = db.Column(db.String(255), nullable=True)
 
-students_assignments = db.Table("students_assignments",
-                                db.Column("student_id", db.Integer, db.ForeignKey("user.id")),
-                                db.Column("assignment_id", db.Integer, db.ForeignKey("assignment.id")),
-                                db.Column("notes", db.String(255)),
-                                db.Column("is_completed", db.Boolean),
-                                db.Column("student_check_in", db.String(255)))
-
-users_projects = db.Table("users_projects",
+users_groups = db.Table("users_groups",
                           db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-                          db.Column("project_id", db.Integer, db.ForeignKey("project.id")))
+                          db.Column("group_id", db.Integer, db.ForeignKey("group.id")))
 
-users_group_chats = db.Table("users_group_chats",
-                             db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-                             db.Column("group_chat_id", db.Integer, db.ForeignKey("group_chat.id")))
 
