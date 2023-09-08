@@ -10,6 +10,9 @@ from resources.auth import LoginResource, RegisterResource
 from resources.cars import AllCarResource, UserCarResource
 from resources.assignment import TeacherAssignmentResource
 from resources.students_assignments import TeacherStudentAssignmentsResource, StudentsAssignmentsResource, StudentsAssignmentResource
+from resources.group import GroupResource
+from resources.user_text import UserTextResource
+from resources.users_groups import UserGroupsResource, DeleteUserFromGroupResource
 from dotenv import load_dotenv
 from os import environ
 
@@ -60,6 +63,10 @@ def create_routes():
     # TODO: Create files for your Resources in resources folder, add them here
     api.add_resource(TeacherAssignmentResource, '/api/assignments')
     api.add_resource(TeacherStudentAssignmentsResource, '/api/get_student_assignments')
-    api.add_resource(StudentsAssignmentsResource, '/api/myassignments/')
+    api.add_resource(StudentsAssignmentsResource, '/api/myassignments')
     api.add_resource(StudentsAssignmentResource, '/api/myassignments/<int:assignment_id>')
+    api.add_resource(GroupResource, '/api/mygroups')
+    api.add_resource(UserGroupsResource, '/api/add_users_to_group')
+    api.add_resource(DeleteUserFromGroupResource, '/api/delete_users_from_the_group/<int:users_groups_id>')
+    api.add_resource(UserTextResource, '/api/my_text')
     return api

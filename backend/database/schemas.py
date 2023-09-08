@@ -72,20 +72,39 @@ cars_schema = CarSchema(many=True)
 
 
 # TODO: Add your schemas below
-class ProjectSchema(ma.Schema):
+class UserTextSchema(ma.Schema):
     id = fields.Integer(primary_key=True)
-    text = fields.String(required=True)
+    user_id = fields.Integer()
+    user = ma.Nested(UserSchema, many=False)
+    usertext = fields.String(required=True)
     song_id = fields.String()
     video_id = fields.String()
     class Meta:
-        fields = ("id", "text", "song_id", "video_id")
+        fields = ("id", "user_id", "user", "usertext", "song_id", "video_id")
 
     @post_load
-    def create_project(self, data, **kwargs):
-        return Project(**data)
+    def create_user_text(self, data, **kwargs):
+        return UserText(**data)
+
+user_text_schema = UserTextSchema()
+user_texts_schema = UserTextSchema(many=True)
+
+class GroupSchema(ma.Schema):
+    id = fields.Integer(primary_key=True)
+    group_name = fields.String(required=True)
+    song_id = fields.String()
+    video_id = fields.String()
+    user_text_id = fields.Integer()
+    usertext = ma.Nested(UserTextSchema, many=False)
+    class Meta:
+        fields = ("id", "group_name", "song_id", "video_id", "user_text_id", "usertext")
+
+    @post_load
+    def create_group(self, data, **kwargs):
+        return Group(**data)
     
-project_schema = ProjectSchema()
-projects_schema = ProjectSchema(many=True)
+group_schema = GroupSchema()
+groups_schema = GroupSchema(many=True)
 
 class AssignmentSchema(ma.Schema):
     id = fields.Integer(primary_key=True)
@@ -116,6 +135,8 @@ class StudentsAssignmentsSchema(ma.Schema):
     student_check_in = fields.String()
     student = ma.Nested(UserSchema, many=False)
     assignment = ma.Nested(AssignmentSchema, many=False)
+    class Meta:
+        fields = ("students_assignments_id", "student_id", "assignment_id", "teacher_id", "notes", "is_completed", "student_check_in", "student", "assignment")
 
     @post_load
     def create_students_assignments(self, data, **kwargs):
@@ -124,18 +145,22 @@ class StudentsAssignmentsSchema(ma.Schema):
 students_assignments_schema = StudentsAssignmentsSchema()
 many_students_assignments_schema = StudentsAssignmentsSchema(many=True)
 
-class UsersProjectsSchema(ma.Schema):
+class UsersGroupsSchema(ma.Schema):
+    id = fields.Integer(primary_key=True)
     user_id = fields.Integer()
     user = ma.Nested(UserSchema, many=False)
-    project_id = fields.Integer()
-    project = ma.Nested(ProjectSchema, many=False)
+    group_id = fields.Integer()
+    group = ma.Nested(GroupSchema, many=False)
+    class Meta:
+        fields = ("id", "user_id", "user", "group_id", "group")
 
     @post_load
-    def create_users_projects(self, data, **kwargs):
-        return users_projects(**data)
+    def create_students_assignments(self, data, **kwargs):
+        return UsersGroups(**data)
 
-users_projects_schema = UsersProjectsSchema()
-many_users_projects_schema = UsersProjectsSchema(many=True)
+users_groups_schema = UsersGroupsSchema()
+many_users_groups_schema = UsersGroupsSchema(many=True)
+
 
 
 

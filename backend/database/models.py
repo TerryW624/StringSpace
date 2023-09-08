@@ -3,6 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
+class UsersGroups(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+    group_id = db.Column(db.Integer, db.ForeignKey("group.id"))
+    group = db.relationship("Group")
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False, unique=True)
@@ -39,11 +47,14 @@ class UserText(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     usertext = db.Column(db.String(255), nullable=False)
     user = db.relationship("User")
+    song_id = db.Column(db.String(255), nullable=True)
+    video_id = db.Column(db.String(255), nullable=True)
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_text_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    text = db.Column(db.String(255), nullable=True)
+    user_text_id = db.Column(db.Integer, db.ForeignKey("user_text.id"))
+    usertext = db.relationship("UserText")
+    group_name = db.Column(db.String(255), nullable=False)
     song_id = db.Column(db.String(255), nullable=True)
     video_id = db.Column(db.String(255), nullable=True)
 
@@ -64,9 +75,5 @@ class StudentsAssignments(db.Model):
     notes = db.Column(db.String(255), nullable=True)
     is_completed = db.Column(db.Boolean, default=False)
     student_check_in = db.Column(db.String(255), nullable=True)
-
-users_groups = db.Table("users_groups",
-                          db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-                          db.Column("group_id", db.Integer, db.ForeignKey("group.id")))
 
 

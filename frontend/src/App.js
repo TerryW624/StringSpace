@@ -6,6 +6,9 @@ import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import RegisterStudentPage from "./pages/RegisterPage/RegisterStudentPage";
+import RegisterTeacherPage from "./pages/RegisterPage/RegisterTeacherPage";
+import RegisterUserPage from "./pages/RegisterPage/RegisterUserPage";
 
 // Component Imports
 import Navbar from "./components/NavBar/NavBar";
@@ -29,6 +32,9 @@ function App() {
         />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/normal-registration" element={<RegisterUserPage />} />
+        <Route path="/student-registration" element={<RegisterStudentPage />} />
+        <Route path="/teacher-registration" element={<RegisterTeacherPage />} />
       </Routes>
       <Footer />
     </div>
